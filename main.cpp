@@ -16,11 +16,11 @@
 
 int main(int argc, char *argv[]) {
 	if (argc != 2) {
-		std::cout << "./name size\n";
+		std::cout << "need define size" << std::endl;
 		return 1;
 	}
 
-	size_t vector_size = std::atoi(argv[1]);
+	uint32_t vector_size = std::atoi(argv[1]);
 	Factory factory;
 
 	Subscriber subscriber;
@@ -31,52 +31,65 @@ int main(int argc, char *argv[]) {
 	std::thread subscriber_thread(std::ref(subscriber));
 
 	std::string cmd;
-	std::cout << "quit or add\n";
+	std::cout << "add - exit" << std::endl;
 	while (std::cin >> cmd) {
 		std::unique_lock<std::mutex> main_lock(subscriber.mtx);
-		if (cmd == "quit" || cmd == "exit" || cmd == "q" || cmd == "e") {
+		if (cmd == "exit" || cmd == "q" || cmd == "e") {
 			subscriber.end = true;
 			subscriber.cv.notify_all();
 			break;
 		} else if (cmd == "add" || cmd == "a") {
-			std::string figure_type;
+			int figure_type;
 
-			for (size_t id = 0; id < vector_size; id++) {
-				std::cout << "figure type\n";
+			for (uint32_t id = 0; id < vector_size; ++id) {
+				std::cout << "figure type" << std::endl
+				<< "\t1 - rectangle" << std::endl
+				<< "\t2 - rhombus" << std::endl
+				<< "\t3 - trapezoid" << std::endl;
 				std::cin >> figure_type;
-				if (figure_type == "rectangle" || figure_type == "r") {
-					std::pair<double, double> *vertices = new std::pair<double, double>[3];
-					for (int i = 0; i < 4; i++) {
+				switch (figure_type)
+				{
+				case 1:{
+					std::pair<double, double> *vertices = new std::pair<double, double>[4];
+					for (int i = 0; i < 4; ++i)
 						std::cin >> vertices[i].first >> vertices[i].second;
-					}
+
 					try {
 						subscriber.buffer.push_back(factory.FigureCreate(rec, vertices, id));
 					} catch (std::logic_error &e) {
-						std::cout << e.what() << "\n";
-						id--;
+						std::cout << e.what() << std::endl;
+						--id;
 					}
-				} else if (figure_type == "rhomb" || figure_type == "h") {
+					break;
+				}
+				case 2: {
 					std::pair<double, double> *vertices = new std::pair<double, double>[4];
-					for (int i = 0; i < 4; i++) {
+					for (int i = 0; i < 4; ++i)
 						std::cin >> vertices[i].first >> vertices[i].second;
-					}
+
 					try {
 						subscriber.buffer.push_back(factory.FigureCreate(rhomb, vertices, id));
 					} catch (std::logic_error &e) {
-						std::cout << e.what() << "\n";
+						std::cout << e.what() << std::endl;
 						id--;
 					}
-				} else if (figure_type == "trapezoid" || figure_type == "t") {
+					break;
+				}
+				case 3: {
 					std::pair<double, double> *vertices = new std::pair<double, double>[4];
-					for (int i = 0; i < 4; i++) {
+					for (int i = 0; i < 4; i++)
 						std::cin >> vertices[i].first >> vertices[i].second;
-					}
+
 					try {
 						subscriber.buffer.push_back(factory.FigureCreate(trap, vertices, id));
 					} catch (std::logic_error &e) {
-						std::cout << e.what() << "\n";
+						std::cout << e.what() << std::endl;
 						id--;
 					}
+					break;
+				}
+				default:
+					break;
 				}
 			}
 
@@ -90,8 +103,6 @@ int main(int argc, char *argv[]) {
 			}
 		}
 	}
-
 	subscriber_thread.join();
-
 	return 0;
 }
