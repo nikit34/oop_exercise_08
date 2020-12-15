@@ -14,6 +14,14 @@
 
 
 
+void menu() {
+	std::cout << std::endl;
+	std::cout << "<menu> - menu" << std::endl;
+    std::cout << "<add> Add figure" << std::endl;
+    std::cout << "<exit> Exit" << std::endl;
+}
+
+
 int main(int argc, char *argv[]) {
 	if (argc != 2) {
 		std::cout << "need define size" << std::endl;
@@ -31,7 +39,7 @@ int main(int argc, char *argv[]) {
 	std::thread subscriber_thread(std::ref(subscriber));
 
 	std::string cmd;
-	std::cout << "add - exit" << std::endl;
+	menu();
 	while (std::cin >> cmd) {
 		std::unique_lock<std::mutex> main_lock(subscriber.mtx);
 		if (cmd == "exit" || cmd == "q" || cmd == "e") {
@@ -101,6 +109,8 @@ int main(int argc, char *argv[]) {
 				});
 				subscriber.success = false;
 			}
+		} else if ("menu" == cmd){
+			menu();
 		}
 	}
 	subscriber_thread.join();
