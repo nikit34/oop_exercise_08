@@ -44,35 +44,35 @@ int main(int argc, char *argv[]) {
 			for (size_t id = 0; id < vector_size; id++) {
 				std::cout << "figure type\n";
 				std::cin >> figure_type;
-				if (figure_type == "triangle" || figure_type == "t") {
+				if (figure_type == "rectangle" || figure_type == "r") {
 					std::pair<double, double> *vertices = new std::pair<double, double>[3];
-					for (int i = 0; i < 3; i++) {
+					for (int i = 0; i < 4; i++) {
 						std::cin >> vertices[i].first >> vertices[i].second;
 					}
 					try {
-						subscriber.buffer.push_back(factory.FigureCreate(TRIANGLE, vertices, id));
+						subscriber.buffer.push_back(factory.FigureCreate(rec, vertices, id));
 					} catch (std::logic_error &e) {
 						std::cout << e.what() << "\n";
 						id--;
 					}
-				} else if (figure_type == "square" || figure_type == "s") {
+				} else if (figure_type == "rhomb" || figure_type == "h") {
 					std::pair<double, double> *vertices = new std::pair<double, double>[4];
 					for (int i = 0; i < 4; i++) {
 						std::cin >> vertices[i].first >> vertices[i].second;
 					}
 					try {
-						subscriber.buffer.push_back(factory.FigureCreate(SQUARE, vertices, id));
+						subscriber.buffer.push_back(factory.FigureCreate(rhomb, vertices, id));
 					} catch (std::logic_error &e) {
 						std::cout << e.what() << "\n";
 						id--;
 					}
-				} else if (figure_type == "rectangle" || figure_type == "r") {
+				} else if (figure_type == "trapezoid" || figure_type == "t") {
 					std::pair<double, double> *vertices = new std::pair<double, double>[4];
 					for (int i = 0; i < 4; i++) {
 						std::cin >> vertices[i].first >> vertices[i].second;
 					}
 					try {
-						subscriber.buffer.push_back(factory.FigureCreate(RECTANGLE, vertices, id));
+						subscriber.buffer.push_back(factory.FigureCreate(trap, vertices, id));
 					} catch (std::logic_error &e) {
 						std::cout << e.what() << "\n";
 						id--;

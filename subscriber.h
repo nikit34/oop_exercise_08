@@ -50,11 +50,13 @@ struct Subscriber {
 				processes[i]->Process(buffer);
 
 			buffer.clear();
+			success = true;
 			cv.notify_all();
 		}
 	}
 
 	bool end = false;
+	bool success = false;
 	std::vector<std::shared_ptr<Figure>> buffer;
 	std::vector<std::shared_ptr<ProcessSubscribers>> processes;
 	std::condition_variable cv;
